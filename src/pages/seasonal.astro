@@ -1,0 +1,125 @@
+---
+import Layout from "../layouts/Layout.astro";
+import ImageSlot from "../components/ImageSlot.astro";
+import PageHero from "../components/PageHero.astro";
+import FooterCta from "../components/FooterCta.astro";
+import { SEASONS, SEASONAL_NOTES, SOURCING, YEAR } from "../data/content2";
+---
+
+<Layout
+  title="What's In Bloom — Wilder &amp; Vine, Asheville NC"
+  description="What's actually in season for Asheville weddings, month by month. Four seasons of stems, where they come from, and why the price moves."
+  current="/seasonal"
+>
+  <PageHero
+    current="Seasonal"
+    eyebrow="Eleven growers · ninety minutes · twelve months"
+    title="What's actually in bloom"
+    lede="The single most useful page on this site. Flowers have seasons, prices follow them, and a wedding built on what's growing that week always looks better than one built on a shipping invoice."
+  />
+
+  <section class="section faq-tabbed">
+    <div class="section-head">
+      <p class="eyebrow">Four seasons</p>
+      <h2>What you can have, and when.</h2>
+    </div>
+    <div class="tabs" data-tabs>
+      <div class="tab-bar" role="tablist" aria-label="Seasons">
+        {SEASONS.map((s, i) => (
+          <button
+            class={`tab-btn${i === 0 ? " active" : ""}`}
+            role="tab"
+            id={`tab-${s.name.toLowerCase()}`}
+            aria-controls={`panel-${s.name.toLowerCase()}`}
+            aria-selected={i === 0 ? "true" : "false"}
+          >
+            {s.name}
+          </button>
+        ))}
+      </div>
+      {SEASONS.map((s, i) => (
+        <div
+          class={`tab-panel${i === 0 ? " active" : ""}`}
+          role="tabpanel"
+          id={`panel-${s.name.toLowerCase()}`}
+          aria-labelledby={`tab-${s.name.toLowerCase()}`}
+          hidden={i !== 0}
+        >
+          <div>
+            <h3>{s.name}</h3>
+            <p class="months">{s.months}</p>
+            {s.paras.map((p) => <p>{p}</p>)}
+          </div>
+          <ul class="stem-list">
+            {s.stems.map((st) => (
+              <li>{st.name} <span>{st.when}</span></li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="section blog">
+    <div class="section-head">
+      <p class="eyebrow">Seasonal notes</p>
+      <h2>Three we get asked about most.</h2>
+    </div>
+    <div class="blog-grid">
+      {SEASONAL_NOTES.map((n) => (
+        <article class="blog-card">
+          <ImageSlot label={n.slot} src={n.src} alt={n.alt} />
+          <div class="blog-body">
+            <p class="blog-date">{n.date}</p>
+            <h3>{n.title}</h3>
+            <p>{n.body}</p>
+            <a class="sc-link" href="#sourcing">
+              Read the note <span aria-hidden="true">&rarr;</span>
+            </a>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="section features" id="sourcing">
+    <div class="section-head">
+      <p class="eyebrow">Sourcing</p>
+      <h2>Where it comes from, and what it costs.</h2>
+    </div>
+    <div class="feature-grid">
+      {SOURCING.map((s) => (
+        <div class="pillar">
+          <div class="num">{s.num}</div>
+          <h3>{s.title}</h3>
+          <p>{s.body}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="section timeline-sec">
+    <div class="section-head">
+      <p class="eyebrow">The year</p>
+      <h2>Month by month.</h2>
+      <p>What is cutting, and what a wedding that month tends to look like.</p>
+    </div>
+    <div class="timeline">
+      {YEAR.map((m) => (
+        <div class="tl-item">
+          <p class="tl-when">{m.when}</p>
+          <h3>{m.title}</h3>
+          <p>{m.body}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <FooterCta
+    eyebrow="Ask us"
+    title="Not sure what's blooming on your date? Ask us."
+    body="Send the date. We'll come back with what's realistically cutting that week and roughly what it costs."
+    label="Check Your Date"
+    href="/enquire"
+  />
+</Layout>

@@ -1,0 +1,236 @@
+---
+import Layout from "../layouts/Layout.astro";
+import PageHero from "../components/PageHero.astro";
+import CtaBanner from "../components/CtaBanner.astro";
+import {
+  AFTER_SEND,
+  ENQUIRE_STEPS,
+  QUICK_FAQ,
+  BUDGET_RANGES,
+  FOUND_US,
+} from "../data/content2";
+import { STUDIO, HOURS, HOURS_NOTE } from "../data/nav";
+---
+
+<Layout
+  title="Check Your Date — Wilder &amp; Vine, Asheville NC"
+  description="Tell us the date, the venue, and roughly what you're imagining. We answer every enquiry within a few days — including the ones we can't take."
+  current="/enquire"
+>
+  <PageHero
+    current="Enquire"
+    eyebrow="A reply within a few days, either way"
+    title="Check your date"
+    lede="Tell us the date, the venue, and roughly what you're imagining. We'll come back either way — including if we're already booked."
+  />
+
+  <section class="section contact-split" id="enquiry">
+    <div class="cs-grid">
+      <form class="enq-form" data-visual>
+        <h3>Your enquiry</h3>
+        <div class="form-grid">
+          <div class="field">
+            <label for="q-names">Names <span class="req" aria-hidden="true">*</span></label>
+            <input
+              id="q-names"
+              name="names"
+              type="text"
+              autocomplete="name"
+              placeholder="Both of you, if there are two"
+              required
+            />
+          </div>
+          <div class="field">
+            <label for="q-email">Email <span class="req" aria-hidden="true">*</span></label>
+            <input id="q-email" name="email" type="email" autocomplete="email" required />
+          </div>
+          <div class="field">
+            <label for="q-phone">Phone</label>
+            <input
+              id="q-phone"
+              name="phone"
+              type="tel"
+              autocomplete="tel"
+              placeholder="(828) 555-0000"
+            />
+          </div>
+          <div class="field">
+            <label for="q-date">
+              Wedding or event date <span class="req" aria-hidden="true">*</span>
+            </label>
+            <input id="q-date" name="date" type="date" required />
+          </div>
+          <div class="field">
+            <label for="q-venue">Venue</label>
+            <input
+              id="q-venue"
+              name="venue"
+              type="text"
+              placeholder="Or the town, if you haven't booked one"
+            />
+          </div>
+          <div class="field">
+            <label for="q-guests">Guest count</label>
+            <input id="q-guests" name="guests" type="number" min="2" placeholder="Roughly" />
+          </div>
+          <div class="field full">
+            <label for="q-budget">Budget range</label>
+            <select id="q-budget" name="budget">
+              {BUDGET_RANGES.map((b) => <option>{b}</option>)}
+            </select>
+          </div>
+          <div class="field full">
+            <label for="q-found">How you found us</label>
+            <select id="q-found" name="found">
+              {FOUND_US.map((f) => <option>{f}</option>)}
+            </select>
+          </div>
+          <div class="field full">
+            <label for="q-vision">What you&rsquo;re imagining</label>
+            <textarea
+              id="q-vision"
+              name="vision"
+              rows="6"
+              placeholder="Colours, flowers you love, flowers you hate, how formal it is, whether there's an arch, what the room looks like. Links and pictures are welcome — send them to hello@wilderandvine.com and we'll match them up."
+            ></textarea>
+          </div>
+        </div>
+        <button class="btn" type="submit">Send an Enquiry</button>
+        <p class="fineprint">
+          No deposit, no obligation, and no follow-up sequence. One reply from one of us.
+        </p>
+      </form>
+      <div class="cs-info">
+        <h3>What happens after you send it</h3>
+        <ol class="numbered">
+          {AFTER_SEND.map((s) => (
+            <li>
+              <div>
+                <b>{s.title}</b>
+                <p>{s.body}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+        <div class="contact-row">
+          <div class="k">Email</div>
+          <div class="v"><a href={`mailto:${STUDIO.email}`}>{STUDIO.email}</a></div>
+        </div>
+        <div class="contact-row">
+          <div class="k">Phone</div>
+          <div class="v"><a href={STUDIO.phoneHref}>{STUDIO.phone}</a></div>
+        </div>
+        <div class="contact-row">
+          <div class="k">Studio</div>
+          <div class="v">{STUDIO.address1}<br />Asheville, NC 28801</div>
+        </div>
+        <p class="lead-note">
+          <b>For memorials, call rather than email.</b> We keep the phone on and we will do
+          same-day or next-day wherever we possibly can.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section process">
+    <div class="section-head">
+      <p class="eyebrow">Three steps</p>
+      <h2>Enquiry to proposal.</h2>
+    </div>
+    <div class="step-grid three">
+      {ENQUIRE_STEPS.map((s) => (
+        <div class="step">
+          <div class="num">{s.num}</div>
+          <h3>{s.title}</h3>
+          <p>{s.body}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="section hours-sec" id="hours">
+    <div class="section-head">
+      <p class="eyebrow">Studio hours</p>
+      <h2>When you&rsquo;ll find us here.</h2>
+    </div>
+    <div class="hours-card" data-hours>
+      <div class="hours-status">
+        <span class="dot" aria-hidden="true"></span>
+        <b data-hours-label>Studio open</b>
+        <span data-hours-sub>Today until 4:00pm</span>
+      </div>
+      <div class="hours-rows">
+        {HOURS.map((h) => (
+          <div class={`hours-row${h.closed ? " closed-day" : ""}`} data-day={h.dow}>
+            <span class="day">{h.day}</span>
+            <span class="time">{h.text}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+    <p class="hours-note">{HOURS_NOTE}</p>
+  </section>
+
+  <section class="section mapembed" id="map">
+    <div class="section-head">
+      <p class="eyebrow">Find us</p>
+      <h2>114 Riverside Drive.</h2>
+    </div>
+    <div class="mapembed-grid">
+      <div class="map-box" role="img" aria-label="Map of 114 Riverside Drive, Asheville NC">
+        <div class="river" style="top:0;bottom:0;left:16%;width:34px;transform:rotate(6deg)"></div>
+        <div class="road" style="top:0;bottom:0;left:30%;width:8px"></div>
+        <div class="road" style="top:44%;left:0;right:0;height:6px"></div>
+        <div class="road" style="top:72%;left:0;right:0;height:4px;opacity:.7"></div>
+        <div class="road" style="top:0;bottom:0;left:66%;width:4px;opacity:.7"></div>
+        <div class="pin"></div>
+        <span class="maplbl">River Arts District · Riverside Drive at Lyman</span>
+      </div>
+      <div class="contact-card">
+        <h3>Getting here</h3>
+        <div class="contact-row">
+          <div class="k">Address</div>
+          <div class="v">{STUDIO.address1}<br />Asheville, NC 28801</div>
+        </div>
+        <div class="contact-row">
+          <div class="k">Phone</div>
+          <div class="v"><a href={STUDIO.phoneHref}>{STUDIO.phone}</a></div>
+        </div>
+        <div class="contact-row">
+          <div class="k">Email</div>
+          <div class="v"><a href={`mailto:${STUDIO.email}`}>{STUDIO.email}</a></div>
+        </div>
+        <p class="lead-note">
+          <b>Parking is behind the building</b>, off the gravel lane — not on Riverside. Come
+          to the unmarked blue door at the back; the front one is bolted and always has been.
+          If it&rsquo;s a hot day, the door will be propped open.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section faq-cards">
+    <div class="section-head">
+      <p class="eyebrow">Quick answers</p>
+      <h2>Six things worth knowing first.</h2>
+    </div>
+    <div class="fc-grid">
+      {QUICK_FAQ.map((f) => (
+        <div class="fc-card">
+          <div class="q-mark" aria-hidden="true">?</div>
+          <h3>{f.q}</h3>
+          <p>{f.a}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <CtaBanner
+    title="We answer every enquiry, including the ones we can't take."
+    body="If you'd rather talk than type, the phone is on Tuesday to Friday and most Saturdays from the van."
+    buttons={[
+      { label: "Send an Enquiry", href: "#enquiry" },
+      { label: "Call the Studio", href: STUDIO.phoneHref, ghost: true },
+    ]}
+  />
+</Layout>

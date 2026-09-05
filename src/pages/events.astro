@@ -1,0 +1,184 @@
+---
+import Layout from "../layouts/Layout.astro";
+import ImageSlot from "../components/ImageSlot.astro";
+import PageHero from "../components/PageHero.astro";
+import CtaBanner from "../components/CtaBanner.astro";
+import { SERVICES, MARQUEE, EVENT_ALT, LOGO_WALL } from "../data/content";
+import { EVENT_TYPES, EVENT_BUDGETS } from "../data/content2";
+import { STUDIO } from "../data/nav";
+
+// The marquee scrolls by translating -50%, so the track has to hold the set
+// twice. The duplicate is aria-hidden — screen readers get one copy.
+const MARQUEE_TRACK = [...MARQUEE, ...MARQUEE];
+---
+
+<Layout
+  title="Events &amp; Weekly Accounts — Wilder &amp; Vine, Asheville NC"
+  description="Corporate dinners, gallery openings, memorials, milestone parties, weekly accounts and workshops. Asheville event florals, most turned around in under two weeks."
+  current="/events"
+>
+  <PageHero
+    current="Events"
+    eyebrow="Dinners, openings, memorials, standing orders"
+    title="Events and everything else"
+    lede="Not every job is a wedding. Some of the best ones are a Tuesday."
+  />
+
+  <section class="section service-cards">
+    <div class="section-head">
+      <p class="eyebrow">What we do</p>
+      <h2>Six things, with what they cost.</h2>
+      <p>
+        Prices are starting points for Asheville proper. Anything further out picks up
+        mileage, which goes on the quote.
+      </p>
+    </div>
+    <div class="sc-grid">
+      {SERVICES.map((s) => (
+        <div class="sc-card">
+          <ImageSlot label={s.slot} src={s.src} alt={s.alt} />
+          <div class="sc-body">
+            <p class="sc-price">{s.price}</p>
+            <h3>{s.title}</h3>
+            <p>{s.body}</p>
+            <a class="sc-link" href="#event-enquiry">
+              Enquire <span aria-hidden="true">&rarr;</span>
+              <span class="sr-only">about {s.title.toLowerCase()}</span>
+            </a>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="carousel-sec">
+    <div class="section-head">
+      <p class="eyebrow">Recent event work</p>
+      <h2>A month of Tuesdays.</h2>
+    </div>
+    <div class="marquee">
+      {MARQUEE_TRACK.map((m, i) => (
+        <div class="mq-item" aria-hidden={i >= MARQUEE.length ? "true" : undefined}>
+          <ImageSlot label={m.slot} src={m.src} alt={i >= MARQUEE.length ? "" : m.alt} eager />
+          <p class="cap">{m.cap}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="section feature-alt">
+    <div class="fa-rows">
+      {EVENT_ALT.map((r) => (
+        <div class={`fa-row${r.flip ? " flip" : ""}`}>
+          <div class="fa-media">
+            <ImageSlot label={r.slot} src={r.src} alt={r.alt} />
+          </div>
+          <div class="fa-body">
+            <p class="eyebrow">{r.eyebrow}</p>
+            <h3>{r.title}</h3>
+            <p>{r.intro}</p>
+            <ul class="fa-list">
+              {r.list.map((li) => <li>{li}</li>)}
+            </ul>
+            {r.outro && <p>{r.outro}</p>}
+            {r.cta && <a class="btn ghost" href={r.cta.href}>{r.cta.label}</a>}
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="section logo-wall">
+    <div class="section-head">
+      <p class="eyebrow">Standing work</p>
+      <h2>Places we&rsquo;re in most weeks.</h2>
+    </div>
+    <div class="lw-grid">
+      {LOGO_WALL.map((l) => (
+        <div class="lw-cell">
+          <b>{l.name}</b>
+          <span>{l.kind}</span>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="section contact-split" id="event-enquiry">
+    <div class="section-head">
+      <p class="eyebrow">Event enquiry</p>
+      <h2>Tell us what and when.</h2>
+    </div>
+    <div class="cs-grid">
+      <form class="enq-form" data-visual>
+        <h3>Event enquiry</h3>
+        <div class="form-grid">
+          <div class="field">
+            <label for="e-name">Name <span class="req" aria-hidden="true">*</span></label>
+            <input id="e-name" name="name" type="text" autocomplete="name" required />
+          </div>
+          <div class="field">
+            <label for="e-email">Email <span class="req" aria-hidden="true">*</span></label>
+            <input id="e-email" name="email" type="email" autocomplete="email" required />
+          </div>
+          <div class="field">
+            <label for="e-date">Date of the event</label>
+            <input id="e-date" name="date" type="date" />
+          </div>
+          <div class="field">
+            <label for="e-type">Type of event</label>
+            <select id="e-type" name="type">
+              {EVENT_TYPES.map((t) => <option>{t}</option>)}
+            </select>
+          </div>
+          <div class="field full">
+            <label for="e-budget">Budget range</label>
+            <select id="e-budget" name="budget">
+              {EVENT_BUDGETS.map((b) => <option>{b}</option>)}
+            </select>
+          </div>
+          <div class="field full">
+            <label for="e-notes">What you have in mind</label>
+            <textarea
+              id="e-notes"
+              name="notes"
+              placeholder="Venue, number of positions or tables, colours you like, anything you'd rather we avoided."
+            ></textarea>
+          </div>
+        </div>
+        <button class="btn" type="submit">Send an Enquiry</button>
+        <p class="fineprint">We answer every enquiry, usually within two working days.</p>
+      </form>
+      <div class="cs-info">
+        <h3>The studio</h3>
+        <div class="contact-row">
+          <div class="k">Studio</div>
+          <div class="v">{STUDIO.address1}<br />Asheville, NC 28801<br />By appointment</div>
+        </div>
+        <div class="contact-row">
+          <div class="k">Phone</div>
+          <div class="v"><a href={STUDIO.phoneHref}>{STUDIO.phone}</a></div>
+        </div>
+        <div class="contact-row">
+          <div class="k">Email</div>
+          <div class="v"><a href={`mailto:${STUDIO.email}`}>{STUDIO.email}</a></div>
+        </div>
+        <div class="contact-row">
+          <div class="k">Hours</div>
+          <div class="v">Tue&ndash;Fri · 9am&ndash;4pm<br />Sat · by arrangement<br />Sun&ndash;Mon · closed</div>
+        </div>
+        <p class="lead-note">
+          <b>Lead times.</b> Most events we can turn around in under two weeks. Memorials we
+          will do same-day or next-day where we possibly can — call, don&rsquo;t email.
+          Weekly accounts start the Monday after we&rsquo;ve agreed the positions. Workshops
+          need three weeks to fill twelve seats.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <CtaBanner
+    title="Most events we can turn around in under two weeks."
+    body="Weddings need a year. Everything else usually needs a phone call."
+    buttons={[{ label: "Send an Enquiry", href: "#event-enquiry" }]}
+  />
+</Layout>

@@ -1,0 +1,133 @@
+---
+import Layout from "../layouts/Layout.astro";
+import PageHero from "../components/PageHero.astro";
+import FooterCta from "../components/FooterCta.astro";
+import { WEDDING_STEPS, TIERS, TIER_TABLE, WEDDING_FAQ } from "../data/content";
+---
+
+<Layout
+  title="Wedding Flowers — Wilder &amp; Vine, Asheville NC"
+  description="Wedding florals in Asheville: three collections from $1,800, what's in each, and how the day actually runs. Forty weddings a year, one a weekend."
+  current="/weddings"
+>
+  <PageHero
+    current="Weddings"
+    eyebrow="Forty a year · Asheville and ninety minutes out"
+    title="Wedding flowers"
+    lede="Forty a year, one a weekend. Here's what's included, what it costs, and how the whole thing actually goes."
+  />
+
+  <section class="section process" id="process">
+    <div class="section-head">
+      <p class="eyebrow">Start to finish</p>
+      <h2>Five steps, about a year apart at each end.</h2>
+    </div>
+    <div class="step-grid">
+      {WEDDING_STEPS.map((s) => (
+        <div class="step">
+          <div class="num">{s.num}</div>
+          <h3>{s.title}</h3>
+          <p>{s.body}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="section pricing" id="pricing">
+    <div class="section-head">
+      <p class="eyebrow">Collections</p>
+      <h2>Three ways in. Most couples land in the middle.</h2>
+      <p>
+        Every collection is a starting point, not a package you have to fit into. The
+        proposal you get back is built for your venue and your guest count.
+      </p>
+    </div>
+    <div class="tier-grid">
+      {TIERS.map((t) => (
+        <div class={`tier${t.popular ? " popular" : ""}`}>
+          {t.badge && <span class="badge">{t.badge}</span>}
+          <h3>{t.name}</h3>
+          <p class="tagline">{t.tagline}</p>
+          <div class="amount"><span class="per">From</span>{t.price}</div>
+          <ul>
+            {t.features.map((f) => <li>{f}</li>)}
+          </ul>
+          <a class="btn" href="/enquire">Check your date</a>
+        </div>
+      ))}
+    </div>
+    <p class="pricing-note">
+      Prices move with the season — the same bouquet costs different money in April and
+      October. <a href="/seasonal">The Seasonal page</a> explains roughly how much and why.
+    </p>
+  </section>
+
+  <section class="section price-table-sec">
+    <div class="section-head">
+      <p class="eyebrow">Side by side</p>
+      <h2>What&rsquo;s in each collection.</h2>
+    </div>
+    <div class="price-table-wrap">
+      <table class="price-table">
+        <caption class="sr-only">Comparison of the three wedding collections</caption>
+        <thead>
+          <tr>
+            <th class="feat-col" scope="col"><span class="sr-only">Feature</span></th>
+            {TIERS.map((t) => (
+              <th class={t.popular ? "pop" : undefined} scope="col">
+                {t.name}<span class="th-price">from {t.price}</span>
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {TIER_TABLE.map((row) => (
+            <tr>
+              <th scope="row">{row.feature}</th>
+              {row.vals.map((v, i) => {
+                const pop = i === 1 ? " pop" : "";
+                if (v === true)
+                  return (
+                    <td class={`yes${pop}`}>
+                      <span aria-hidden="true">✓</span><span class="sr-only">Included</span>
+                    </td>
+                  );
+                if (v === false)
+                  return (
+                    <td class={`no${pop}`}>
+                      <span aria-hidden="true">—</span>
+                      <span class="sr-only">Not included</span>
+                    </td>
+                  );
+                return <td class={`val${pop}`}>{v}</td>;
+              })}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="section faq-two">
+    <div class="section-head">
+      <p class="eyebrow">Before you book</p>
+      <h2>The questions we get before booking.</h2>
+    </div>
+    <div class="faq-cols">
+      {WEDDING_FAQ.map((f) => (
+        <div class="faq-q">
+          <h3>{f.q}</h3>
+          <p>{f.a}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <FooterCta
+    eyebrow="One weekend at a time"
+    title="Check whether we're free on your date."
+    body="Send the date and the venue. You'll hear back within a few days either way."
+    label="Check Your Date"
+    href="/enquire"
+  />
+</Layout>

@@ -1,0 +1,431 @@
+---
+import "../styles/tokens.css";
+import "../styles/wilder.css";
+import { STUDIO, NAV, FOOTER_LINKS } from "../data/nav";
+
+interface Props {
+  title: string;
+  description: string;
+  /** Path of the current page, used to mark the active nav link. */
+  current?: string;
+  /**
+   * Interior pages carry a solid header from the top. Only the home page,
+   * whose hero sits behind the bar, starts transparent.
+   */
+  solidHeader?: boolean;
+}
+
+const { title, description, current = "", solidHeader = true } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Work+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap"
+    />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header
+      class="site-header"
+      id="header"
+      data-always-solid={solidHeader ? "" : undefined}
+    >
+      <div class="wrap">
+        <a class="brand" href="/">
+          <span class="name">WILDER &amp; VINE</span>
+          <span class="sub">{STUDIO.tagline}</span>
+        </a>
+        <nav class="nav" id="nav" aria-label="Main">
+          {NAV.map((item) => (
+            <a
+              class={`lnk${current === item.href ? " active" : ""}`}
+              href={item.href}
+              aria-current={current === item.href ? "page" : undefined}
+            >
+              {item.label}
+            </a>
+          ))}
+          <a class="btn" href="/enquire">Check Your Date</a>
+        </nav>
+        <button
+          class="nav-toggle"
+          id="navToggle"
+          aria-label="Menu"
+          aria-expanded="false"
+          aria-controls="nav"
+        >
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </header>
+
+    <main id="main">
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-grid">
+        <div>
+          <a class="brand" href="/">
+            <span class="name">WILDER &amp; VINE</span>
+            <span class="sub">{STUDIO.tagline}</span>
+          </a>
+          <p class="foot-blurb">{STUDIO.blurb}</p>
+          <p class="foot-contact">
+            {STUDIO.address1}<br />{STUDIO.address2}<br />
+            <a href={STUDIO.phoneHref}>{STUDIO.phone}</a><br />
+            <a href={`mailto:${STUDIO.email}`}>{STUDIO.email}</a>
+          </p>
+        </div>
+        <div class="foot-col">
+          <h4>Weddings</h4>
+          <ul>
+            {FOOTER_LINKS.weddings.map((l) => (
+              <li><a href={l.href}>{l.label}</a></li>
+            ))}
+          </ul>
+        </div>
+        <div class="foot-col">
+          <h4>Studio</h4>
+          <ul>
+            {FOOTER_LINKS.studio.map((l) => (
+              <li><a href={l.href}>{l.label}</a></li>
+            ))}
+          </ul>
+        </div>
+        <div class="foot-col">
+          <h4>Seasonal notes</h4>
+          <p>What&rsquo;s in season, once a month, from the people cutting it.</p>
+          <form class="signup" data-visual>
+            <input
+              type="email"
+              placeholder="you@example.com"
+              aria-label="Email address"
+              required
+            />
+            <button type="submit">Sign up</button>
+          </form>
+        </div>
+      </div>
+      <div class="foot-bar">
+        <span>© 2018–2026 {STUDIO.name} · Asheville, North Carolina</span>
+        <span class="tagline">{STUDIO.footTagline}</span>
+      </div>
+    </footer>
+
+    <script is:inline>
+      // Wilder & Vine — shared interactions across all pages.
+      // Ported from the canvas wilder.js. Behaviour is unchanged except for the
+      // nav (aria-expanded, scroll lock, Escape to close), the lightbox (focus
+      // trap, aria-modal, focus restore) and prefers-reduced-motion guards on
+      // both autoplaying carousels.
+      (function () {
+        "use strict";
+
+        var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+        /* Header: transparent over the hero, solid on scroll.
+           Interior pages carry data-always-solid and never go transparent. */
+        var header = document.getElementById("header");
+        if (header) {
+          var always = header.hasAttribute("data-always-solid");
+          var onScroll = function () {
+            header.classList.toggle("solid", always || window.scrollY > 24);
+          };
+          onScroll();
+          if (!always) window.addEventListener("scroll", onScroll, { passive: true });
+        }
+
+        /* Nav drawer */
+        var navToggle = document.getElementById("navToggle"),
+          nav = document.getElementById("nav");
+        if (navToggle && nav) {
+          var setNav = function (open) {
+            nav.classList.toggle("open", open);
+            navToggle.setAttribute("aria-expanded", String(open));
+            document.body.style.overflow = open ? "hidden" : "";
+          };
+          navToggle.addEventListener("click", function () {
+            setNav(!nav.classList.contains("open"));
+          });
+          nav.addEventListener("click", function (e) {
+            if (e.target.classList.contains("lnk") || e.target.classList.contains("btn"))
+              setNav(false);
+          });
+          document.addEventListener("keydown", function (e) {
+            if (e.key === "Escape" && nav.classList.contains("open")) {
+              setNav(false);
+              navToggle.focus();
+            }
+          });
+        }
+
+        /* Hero slideshow — crossfade + dots */
+        var hero = document.querySelector("[data-hero-slideshow]");
+        if (hero) {
+          var slides = [].slice.call(hero.querySelectorAll(".hero-slide")),
+            dots = [].slice.call(hero.querySelectorAll(".hero-dot")),
+            cap = hero.querySelector("[data-hero-cap]"),
+            hi = 0,
+            ht = null;
+          var showHero = function (n) {
+            hi = (n + slides.length) % slides.length;
+            slides.forEach(function (s, i) {
+              s.classList.toggle("active", i === hi);
+            });
+            dots.forEach(function (d, i) {
+              d.classList.toggle("active", i === hi);
+              d.setAttribute("aria-selected", String(i === hi));
+            });
+            if (cap) cap.textContent = slides[hi].getAttribute("data-cap") || "";
+          };
+          var startHero = function () {
+            if (reduceMotion) return;
+            if (ht) clearInterval(ht);
+            ht = setInterval(function () {
+              showHero(hi + 1);
+            }, 5600);
+          };
+          dots.forEach(function (d, i) {
+            d.addEventListener("click", function () {
+              showHero(i);
+              startHero();
+            });
+          });
+          showHero(0);
+          startHero();
+        }
+
+        /* Thumbnail gallery — click a thumb to swap the stage */
+        var tg = document.querySelector("[data-thumbgallery]");
+        if (tg) {
+          var frames = [].slice.call(tg.querySelectorAll(".tg-frame")),
+            thumbs = [].slice.call(tg.querySelectorAll(".tg-thumb"));
+          thumbs.forEach(function (t, i) {
+            t.addEventListener("click", function () {
+              frames.forEach(function (f, j) {
+                f.classList.toggle("active", i === j);
+              });
+              thumbs.forEach(function (x, j) {
+                x.classList.toggle("active", i === j);
+                x.setAttribute("aria-selected", String(i === j));
+              });
+            });
+          });
+        }
+
+        /* Testimonial slider */
+        var ts = document.querySelector("[data-slider]");
+        if (ts) {
+          var tslides = [].slice.call(ts.querySelectorAll(".t-slide")),
+            tdots = [].slice.call(ts.querySelectorAll(".t-dot")),
+            ti = 0,
+            tt = null;
+          var showT = function (n) {
+            ti = (n + tslides.length) % tslides.length;
+            tslides.forEach(function (s, i) {
+              s.classList.toggle("active", i === ti);
+            });
+            tdots.forEach(function (d, i) {
+              d.classList.toggle("active", i === ti);
+              d.setAttribute("aria-selected", String(i === ti));
+            });
+          };
+          var stopT = function () {
+            if (tt) clearInterval(tt);
+          };
+          var startT = function () {
+            if (reduceMotion) return;
+            stopT();
+            tt = setInterval(function () {
+              showT(ti + 1);
+            }, 7500);
+          };
+          tdots.forEach(function (d, i) {
+            d.addEventListener("click", function () {
+              showT(i);
+              startT();
+            });
+          });
+          ts.addEventListener("mouseenter", stopT);
+          ts.addEventListener("mouseleave", startT);
+          showT(0);
+          startT();
+        }
+
+        /* Seasonal tabs */
+        var tabs = document.querySelector("[data-tabs]");
+        if (tabs) {
+          var btns = [].slice.call(tabs.querySelectorAll(".tab-btn")),
+            panels = [].slice.call(tabs.querySelectorAll(".tab-panel"));
+          btns.forEach(function (b, i) {
+            b.addEventListener("click", function () {
+              btns.forEach(function (x, j) {
+                x.classList.toggle("active", i === j);
+                x.setAttribute("aria-selected", i === j ? "true" : "false");
+              });
+              panels.forEach(function (p, j) {
+                p.classList.toggle("active", i === j);
+                p.hidden = i !== j;
+              });
+            });
+          });
+        }
+
+        /* Stats counter — count up once on view */
+        var statNums = [].slice.call(document.querySelectorAll("[data-count]"));
+        if (statNums.length) {
+          var run = function (el) {
+            var target = parseFloat(el.getAttribute("data-count"));
+            if (!isFinite(target)) return;
+            var t0 = null,
+              dur = 1300;
+            var tick = function (ts2) {
+              if (!t0) t0 = ts2;
+              var p = Math.min(1, (ts2 - t0) / dur);
+              // Snap to the exact target on the final frame — the eased value
+              // lands a hair short and rounds down (40 rendering as 39).
+              el.textContent = p >= 1 ? target : Math.round(target * (1 - Math.pow(1 - p, 3)));
+              if (p < 1) requestAnimationFrame(tick);
+            };
+            requestAnimationFrame(tick);
+          };
+          // The markup already holds the real number — the count-up only ever
+          // overwrites it once it actually starts, so a missed observer (or
+          // reduced motion) is harmless.
+          var started = false;
+          var startAll = function () {
+            if (started) return;
+            started = true;
+            statNums.forEach(run);
+          };
+          if (reduceMotion) {
+            started = true;
+          } else if ("IntersectionObserver" in window) {
+            var io = new IntersectionObserver(
+              function (entries) {
+                entries.forEach(function (en) {
+                  if (en.isIntersecting) {
+                    io.disconnect();
+                    startAll();
+                  }
+                });
+              },
+              { threshold: 0.4 }
+            );
+            statNums.forEach(function (el) {
+              io.observe(el);
+            });
+            setTimeout(function () {
+              if (!started) {
+                io.disconnect();
+                startAll();
+              }
+            }, 2500);
+          } else startAll();
+        }
+
+        /* Lightbox */
+        var lb = document.getElementById("lightbox");
+        if (lb) {
+          var lbStage = lb.querySelector(".lb-stage"),
+            lbCap = lb.querySelector(".lb-cap"),
+            lbClose = lb.querySelector(".lb-close"),
+            lastFocus = null;
+          var closeLb = function () {
+            lb.classList.remove("open");
+            lb.setAttribute("aria-hidden", "true");
+            document.body.style.overflow = "";
+            if (lastFocus) lastFocus.focus();
+          };
+          var openLb = function (tile) {
+            lastFocus = tile;
+            var slot = tile.querySelector(".img-slot");
+            [].slice.call(lbStage.querySelectorAll(".img-slot")).forEach(function (n) {
+              n.remove();
+            });
+            if (slot) {
+              var clone = slot.cloneNode(true);
+              clone.removeAttribute("id");
+              clone.style.position = "absolute";
+              clone.style.inset = "0";
+              clone.style.width = "100%";
+              clone.style.height = "100%";
+              lbStage.insertBefore(clone, lbCap);
+            }
+            lbCap.textContent = tile.getAttribute("data-cap") || "";
+            lb.classList.add("open");
+            lb.setAttribute("aria-hidden", "false");
+            document.body.style.overflow = "hidden";
+            if (lbClose) lbClose.focus();
+          };
+          [].slice.call(document.querySelectorAll(".lb-tile")).forEach(function (t) {
+            t.addEventListener("click", function () {
+              openLb(t);
+            });
+          });
+          lb.addEventListener("click", function (e) {
+            if (e.target === lb || e.target.classList.contains("lb-close")) closeLb();
+          });
+          document.addEventListener("keydown", function (e) {
+            if (!lb.classList.contains("open")) return;
+            if (e.key === "Escape") closeLb();
+            // Only the close button is focusable inside, so Tab always lands there.
+            if (e.key === "Tab") {
+              e.preventDefault();
+              if (lbClose) lbClose.focus();
+            }
+          });
+        }
+
+        /* Studio hours: Tue–Fri 9–4 by appointment, Sat by arrangement,
+           closed Sun–Mon */
+        var hoursCard = document.querySelector("[data-hours]");
+        if (hoursCard) {
+          var openDays = { 2: [9, 16], 3: [9, 16], 4: [9, 16], 5: [9, 16] };
+          var now = new Date(),
+            day = now.getDay(),
+            hour = now.getHours() + now.getMinutes() / 60;
+          var todays = openDays[day],
+            isOpen = !!todays && hour >= todays[0] && hour < todays[1];
+          var dot = hoursCard.querySelector(".dot"),
+            label = hoursCard.querySelector("[data-hours-label]"),
+            sub = hoursCard.querySelector("[data-hours-sub]");
+          if (dot) dot.classList.toggle("closed", !isOpen);
+          if (label) label.textContent = isOpen ? "Studio open" : "Studio closed";
+          if (sub) {
+            if (isOpen) sub.textContent = "Today until 4:00pm";
+            else if (todays)
+              sub.textContent =
+                hour < todays[0] ? "Opens today at 9:00am" : "Opens tomorrow at 9:00am";
+            else if (day === 6) sub.textContent = "Saturdays by arrangement";
+            else sub.textContent = "Opens Tuesday at 9:00am";
+          }
+          var todayRow = hoursCard.querySelector('.hours-row[data-day="' + day + '"]');
+          if (todayRow) todayRow.classList.add("today");
+        }
+
+        /* Visual-only forms don't navigate */
+        [].slice.call(document.querySelectorAll("form[data-visual]")).forEach(function (f) {
+          f.addEventListener("submit", function (e) {
+            e.preventDefault();
+          });
+        });
+      })();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,175 @@
+---
+import Layout from "../layouts/Layout.astro";
+import ImageSlot from "../components/ImageSlot.astro";
+import CtaBanner from "../components/CtaBanner.astro";
+import {
+  HERO_SLIDES,
+  STATS,
+  PILLARS,
+  THUMB_GALLERY,
+  HOME_ALT,
+  TESTIMONIALS,
+} from "../data/content";
+---
+
+<Layout
+  title="Wilder &amp; Vine — Wedding &amp; Event Florals, Asheville NC"
+  description="Wedding and event florals in Asheville, North Carolina. Forty weddings a year, eleven local growers, and flowers chosen for what's actually in bloom."
+  current="/"
+  solidHeader={false}
+>
+  <section class="hero" data-hero-slideshow>
+    <div class="hero-slides">
+      {HERO_SLIDES.map((s, i) => (
+        <div class={`hero-slide${i === 0 ? " active" : ""}`} data-cap={s.cap}>
+          <ImageSlot label={s.slot} src={s.src} alt={s.alt} eager={i === 0} />
+        </div>
+      ))}
+    </div>
+    <div class="hero-scrim"></div>
+    <div class="hero-body">
+      <p class="eyebrow">Wedding &amp; event florals · Asheville, North Carolina</p>
+      <h1>Flowers that look like where they came from.</h1>
+      <p class="subhead">
+        Wedding and event florals in Asheville and the mountains around it. We work with
+        what&rsquo;s actually in bloom, and we&rsquo;ll tell you when what you want
+        isn&rsquo;t.
+      </p>
+      <div class="cta-row">
+        <a class="btn" href="/enquire">Check Your Date</a>
+        <a class="btn ghost on-dark" href="/gallery">See the Work</a>
+      </div>
+    </div>
+    <div class="hero-dots" role="tablist" aria-label="Hero slides">
+      {HERO_SLIDES.map((s, i) => (
+        <button
+          class={`hero-dot${i === 0 ? " active" : ""}`}
+          role="tab"
+          aria-selected={i === 0 ? "true" : "false"}
+          aria-label={s.cap}
+        ></button>
+      ))}
+    </div>
+    <p class="hero-caption" data-hero-cap></p>
+  </section>
+
+  <section class="section stats">
+    <div class="stat-grid">
+      {STATS.map((s) => (
+        <div class="stat">
+          <div class="num"><span data-count={s.num}>{s.num}</span></div>
+          <p class="lbl">{s.label}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="section features">
+    <div class="section-head">
+      <p class="eyebrow">How we work</p>
+      <h2>Three things worth knowing before you enquire.</h2>
+    </div>
+    <div class="feature-grid">
+      {PILLARS.map((p) => (
+        <div class="pillar">
+          <div class="num">{p.num}</div>
+          <h3>{p.title}</h3>
+          <p>{p.body}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="section thumbs-sec">
+    <div class="section-head">
+      <p class="eyebrow">One wedding</p>
+      <h2>A recent one, start to finish.</h2>
+    </div>
+    <div class="tg" data-thumbgallery>
+      <div class="tg-stage">
+        {THUMB_GALLERY.map((g, i) => (
+          <div class={`tg-frame${i === 0 ? " active" : ""}`}>
+            <ImageSlot label={g.slot} src={g.src} alt={g.alt} />
+            <p class="tg-cap">{g.cap}</p>
+          </div>
+        ))}
+      </div>
+      <div class="tg-thumbs" role="tablist" aria-label="Wedding photos">
+        {THUMB_GALLERY.map((g, i) => (
+          <button
+            class={`tg-thumb${i === 0 ? " active" : ""}`}
+            role="tab"
+            aria-selected={i === 0 ? "true" : "false"}
+            aria-label={g.thumbLabel}
+          >
+            <ImageSlot label={g.thumbLabel} src={g.src} alt="" />
+          </button>
+        ))}
+      </div>
+      <p class="tg-note">Thea &amp; Peter — Hawkesdene, Andrews · October 2025</p>
+    </div>
+  </section>
+
+  <section class="section feature-alt">
+    <div class="fa-rows">
+      {HOME_ALT.map((r) => (
+        <div class={`fa-row${r.flip ? " flip" : ""}`}>
+          <div class="fa-media">
+            <ImageSlot label={r.slot} src={r.src} alt={r.alt} />
+          </div>
+          <div class="fa-body">
+            <p class="eyebrow">{r.eyebrow}</p>
+            <h3>{r.title}</h3>
+            <p>{r.intro}</p>
+            <ul class="fa-list">
+              {r.list.map((li) => <li>{li}</li>)}
+            </ul>
+            <a class="btn ghost" href={r.cta.href}>{r.cta.label}</a>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="section t-slider-sec">
+    <div class="section-head">
+      <p class="eyebrow">From couples</p>
+      <h2>What people say afterwards.</h2>
+    </div>
+    <div class="t-slider" data-slider>
+      <div class="t-stage">
+        {TESTIMONIALS.map((t, i) => (
+          <div class={`t-slide${i === 0 ? " active" : ""}`}>
+            <div class="qm" aria-hidden="true">&ldquo;</div>
+            <blockquote>{t.quote}</blockquote>
+            <div class="who">
+              <div class="avatar" aria-hidden="true">{t.who.charAt(0)}</div>
+              <div class="meta">
+                <b>{t.who}</b><span>{t.when}</span>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+      <div class="t-dots" role="tablist" aria-label="Testimonials">
+        {TESTIMONIALS.map((t, i) => (
+          <button
+            class={`t-dot${i === 0 ? " active" : ""}`}
+            role="tab"
+            aria-selected={i === 0 ? "true" : "false"}
+            aria-label={`Quote from ${t.who}`}
+          ></button>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <CtaBanner
+    title="Tell us your date and we'll tell you what's blooming."
+    body="We answer every enquiry, including the ones we can't take. If we're already booked that weekend we'll say so in the first reply."
+    buttons={[
+      { label: "Check Your Date", href: "/enquire" },
+      { label: "See Pricing", href: "/weddings#pricing", ghost: true },
+    ]}
+  />
+</Layout>

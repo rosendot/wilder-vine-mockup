@@ -1,0 +1,97 @@
+---
+import Layout from "../layouts/Layout.astro";
+import ImageSlot from "../components/ImageSlot.astro";
+import PageHero from "../components/PageHero.astro";
+import CtaBanner from "../components/CtaBanner.astro";
+import { MASONRY, COMPARE, LIGHTBOX } from "../data/content2";
+---
+
+<Layout
+  title="The Work — Wilder &amp; Vine, Asheville NC"
+  description="Four years of Asheville wedding and event florals, roughly in order. Bouquets, arches, tablescapes and installations, all built by the two of us."
+  current="/gallery"
+>
+  <PageHero
+    current="Gallery"
+    eyebrow="2022–2026 · weddings and events"
+    title="The work"
+    lede="Four years of weddings and events, roughly in order. Every one of these was grown, cut, conditioned, and built by the two of us."
+  />
+
+  <section class="section masonry-sec">
+    <div class="masonry">
+      {MASONRY.map((m) => (
+        <figure class="mas-item">
+          <ImageSlot label={m.slot} src={m.src} alt={m.alt} ratio={m.ratio} />
+          <figcaption class="cap">{m.cap}</figcaption>
+        </figure>
+      ))}
+    </div>
+  </section>
+
+  <section class="section compare-sec">
+    <div class="section-head">
+      <p class="eyebrow">What the season changes</p>
+      <h2>The same arch, two seasons.</h2>
+      <p>
+        Same structure, same venue, same position on the hill. Five months apart in the year
+        and almost nothing in common on it.
+      </p>
+    </div>
+    <div class="compare-row">
+      <div class="compare-cell">
+        <span class="clbl">{COMPARE.may.label}</span>
+        <ImageSlot label={COMPARE.may.slot} src={COMPARE.may.src} alt={COMPARE.may.alt} />
+      </div>
+      <div class="compare-cell">
+        <span class="clbl">{COMPARE.oct.label}</span>
+        <ImageSlot label={COMPARE.oct.slot} src={COMPARE.oct.src} alt={COMPARE.oct.alt} />
+      </div>
+      <div class="compare-meta">
+        <div>
+          <h4>{COMPARE.may.title}</h4>
+          <p>{COMPARE.may.body}</p>
+        </div>
+        <div>
+          <h4>{COMPARE.oct.title}</h4>
+          <p>{COMPARE.oct.body}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section lightbox-sec">
+    <div class="section-head">
+      <p class="eyebrow">Details</p>
+      <h2>Close in.</h2>
+      <p>Click any of these to open it full-screen.</p>
+    </div>
+    <div class="lb-grid">
+      {LIGHTBOX.map((t) => (
+        <button class="lb-tile" data-cap={t.cap} aria-label={`Open full screen: ${t.cap}`}>
+          <ImageSlot label={t.slot} src={t.src} alt="" />
+        </button>
+      ))}
+    </div>
+  </section>
+
+  <div
+    class="lb-modal"
+    id="lightbox"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Photo detail"
+    aria-hidden="true"
+  >
+    <button class="lb-close" aria-label="Close">×</button>
+    <div class="lb-stage">
+      <p class="lb-cap"></p>
+    </div>
+  </div>
+
+  <CtaBanner
+    title="If something here is close to what you had in mind, tell us."
+    body="Send the picture and the date. We'll tell you what that looks like in your month."
+    buttons={[{ label: "Check Your Date", href: "/enquire" }]}
+  />
+</Layout>

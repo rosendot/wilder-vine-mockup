@@ -1,0 +1,21 @@
+---
+/** Dark closing band. The quieter alternative to CtaBanner. */
+interface Props {
+  eyebrow: string;
+  title: string;
+  body: string;
+  label: string;
+  href: string;
+}
+
+const { eyebrow, title, body, label, href } = Astro.props;
+---
+
+<section class="section footer-cta">
+  <div class="wrap">
+    <p class="eyebrow">{eyebrow}</p>
+    <h2>{title}</h2>
+    <p>{body}</p>
+    <div class="cta-row center"><a class="btn" href={href}>{label}</a></div>
+  </div>
+</section>

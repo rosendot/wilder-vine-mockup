@@ -1,0 +1,112 @@
+---
+import Layout from "../layouts/Layout.astro";
+import ImageSlot from "../components/ImageSlot.astro";
+import PageHero from "../components/PageHero.astro";
+import CtaBanner from "../components/CtaBanner.astro";
+import {
+  SPOTLIGHT,
+  CREW,
+  MILESTONES,
+  STUDIO_GALLERY,
+  STUDIO_FAQ,
+} from "../data/content2";
+---
+
+<Layout
+  title="The Studio — Wilder &amp; Vine, Asheville NC"
+  description="A converted garage on Riverside Drive, a walk-in cooler, and a van that has seen things. Meet Marisol and Bea, and see where the flowers actually get built."
+  current="/the-studio"
+>
+  <PageHero
+    current="The Studio"
+    eyebrow="114 Riverside Drive · since 2021"
+    title="Two people and a cold room"
+    lede="A converted garage on Riverside Drive, a walk-in cooler, and a van that has seen things."
+  />
+
+  <section class="section spotlight">
+    <div class="spotlight-grid">
+      <div class="spotlight-media">
+        <ImageSlot label={SPOTLIGHT.slot} src={SPOTLIGHT.src} alt={SPOTLIGHT.alt} />
+        <span class="badge">{SPOTLIGHT.badge}</span>
+      </div>
+      <div class="spotlight-body">
+        <p class="eyebrow">{SPOTLIGHT.eyebrow}</p>
+        <h2>{SPOTLIGHT.title}</h2>
+        {SPOTLIGHT.paras.map((p) => <p>{p}</p>)}
+        <blockquote class="pullquote">{SPOTLIGHT.pullquote}</blockquote>
+      </div>
+    </div>
+  </section>
+
+  <section class="section team">
+    <div class="section-head">
+      <p class="eyebrow">Seasonal crew</p>
+      <h2>Two more pairs of hands, May to October.</h2>
+    </div>
+    <div class="team-grid">
+      {CREW.map((c) => (
+        <div class="team-card">
+          <ImageSlot label={c.slot} src={c.src} alt={c.alt} />
+          <div>
+            <h3>{c.name}</h3>
+            <p class="role">{c.role}</p>
+            <p>{c.body}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="section timeline-sec">
+    <div class="section-head">
+      <p class="eyebrow">How we got here</p>
+      <h2>Eight years, five that mattered.</h2>
+    </div>
+    <div class="timeline">
+      {MILESTONES.map((m) => (
+        <div class="tl-item">
+          <p class="tl-when">{m.when}</p>
+          <h3>{m.title}</h3>
+          <p>{m.body}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="section grid-gallery">
+    <div class="section-head">
+      <p class="eyebrow">Inside</p>
+      <h2>The place itself.</h2>
+    </div>
+    <div class="gg-grid">
+      {STUDIO_GALLERY.map((g) => (
+        <div class={`gg-cell${g.wide ? " wide" : ""}`}>
+          <ImageSlot label={g.slot} src={g.src} alt={g.alt} />
+          <p class="cap">{g.cap}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="section faq" id="faq">
+    <div class="section-head">
+      <p class="eyebrow">Questions</p>
+      <h2>Things people ask about the studio.</h2>
+    </div>
+    <div class="faq-list">
+      {STUDIO_FAQ.map((f, i) => (
+        <details class="faq-item" open={i === 0}>
+          <summary>{f.q}<span class="mk" aria-hidden="true"></span></summary>
+          <div class="ans"><p>{f.a}</p></div>
+        </details>
+      ))}
+    </div>
+  </section>
+
+  <CtaBanner
+    title="Come see the cold room. Bring coffee."
+    body="Tue–Fri, 9am to 4pm, by appointment. It smells better than it looks."
+    buttons={[{ label: "Book a Visit", href: "/enquire" }]}
+  />
+</Layout>

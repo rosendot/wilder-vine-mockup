@@ -1,0 +1,28 @@
+---
+/** Full-width primary-colour CTA band. Used to close most pages. */
+interface Button {
+  label: string;
+  href: string;
+  ghost?: boolean;
+}
+
+interface Props {
+  title: string;
+  body: string;
+  buttons: Button[];
+}
+
+const { title, body, buttons } = Astro.props;
+---
+
+<section class="section cta-banner">
+  <div class="wrap">
+    <h2>{title}</h2>
+    <p>{body}</p>
+    <div class="cta-row center">
+      {buttons.map((b) => (
+        <a class={`btn${b.ghost ? " ghost" : ""}`} href={b.href}>{b.label}</a>
+      ))}
+    </div>
+  </div>
+</section>
