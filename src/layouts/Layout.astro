@@ -28,7 +28,12 @@ const { title, description, current = "", solidHeader = true } = Astro.props;
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
+    <meta property="og:image" content={new URL("/og-image.png", Astro.site)} />
+    <meta name="twitter:card" content="summary_large_image" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" type="image/webp" sizes="32x32" href="/favicon-32.webp" />
+    <link rel="icon" type="image/webp" sizes="192x192" href="/icon-192.webp" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -46,8 +51,14 @@ const { title, description, current = "", solidHeader = true } = Astro.props;
     >
       <div class="wrap">
         <a class="brand" href="/">
-          <span class="name">WILDER &amp; VINE</span>
-          <span class="sub">{STUDIO.tagline}</span>
+          <span class="mark" aria-hidden="true">
+            <img class="mark-img mark-light" src="/emblem-light.png" alt="" width="44" height="44" />
+            <img class="mark-img mark-plum" src="/emblem-plum.png" alt="" width="44" height="44" />
+          </span>
+          <span class="brand-text">
+            <span class="name">WILDER &amp; VINE</span>
+            <span class="sub">{STUDIO.tagline}</span>
+          </span>
         </a>
         <nav class="nav" id="nav" aria-label="Main">
           {NAV.map((item) => (
@@ -81,8 +92,13 @@ const { title, description, current = "", solidHeader = true } = Astro.props;
       <div class="footer-grid">
         <div>
           <a class="brand" href="/">
-            <span class="name">WILDER &amp; VINE</span>
-            <span class="sub">{STUDIO.tagline}</span>
+            <span class="mark" aria-hidden="true">
+              <img class="mark-img" src="/emblem-light.png" alt="" width="44" height="44" />
+            </span>
+            <span class="brand-text">
+              <span class="name">WILDER &amp; VINE</span>
+              <span class="sub">{STUDIO.tagline}</span>
+            </span>
           </a>
           <p class="foot-blurb">{STUDIO.blurb}</p>
           <p class="foot-contact">
