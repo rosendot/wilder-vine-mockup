@@ -1,10 +1,10 @@
 // Renders the Wilder & Vine brand assets. Run from the repo root:
-//   node .brand/build-assets.mjs
+//   npm install && node .brand/build-assets.mjs
 //
-// sharp isn't a dependency here (the site itself doesn't need it), so this
-// borrows the vault's copy by explicit path. NODE_PATH does NOT work for this —
-// it applies to CommonJS resolution only, and this file is ESM, so the import
-// has to go through createRequire.
+// sharp is a devDependency here so this script is self-contained. The other
+// mockups don't declare it and get it transitively — Astro lists it as an
+// OPTIONAL dependency — which works until something prunes it from the
+// lockfile, at which point their brand build breaks with no obvious cause.
 //
 // THE MARK: a dahlia rosette — two rings of pointed petals around a sage core.
 // Dahlias are the flower the site's copy keeps returning to (September is "our
@@ -24,11 +24,7 @@
 // footer is near-black. One colourway can't do all three:
 //   emblem-light.png  cream petals  -> over the hero, and in the dark footer
 //   emblem-plum.png   plum petals   -> on the white scrolled bar
-import { createRequire } from "node:module";
-const require = createRequire(
-  "c:/Users/Rosendo Torres/Documents/altas-studio/atlas-studio-internal/"
-);
-const sharp = require("sharp");
+import sharp from "sharp";
 
 const WIST  = "#8678ad";   // --color-primary
 const PLUM  = "#6a5d8f";   // --color-primary-dark
